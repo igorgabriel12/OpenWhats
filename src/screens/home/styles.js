@@ -44,6 +44,7 @@ export const Column = styled.View`
 
 export const ContainerInput = styled.View`
   height: 50px;
+  overflow: hidden;
   border-width: 1px;
   border-color: #ddd;
   border-radius: 5px;

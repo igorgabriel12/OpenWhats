@@ -1,11 +1,11 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {
-  View,
-  TextInput,
-  StatusBar,
   Linking,
-  ImageBackground,
   Keyboard,
+  StatusBar,
+  Share,
+  ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 
 import {
@@ -26,66 +26,102 @@ import {
   ContainerWhastsAnimation,
 } from './styles';
 
-import TextInputMask from 'react-native-text-input-mask';
 import LottieView from 'lottie-react-native';
+import {IntlPhoneInput} from '../../components';
+import DeviceInfo from 'react-native-device-info';
+import Icon from 'react-native-vector-icons/Ionicons';
 import DrinkAnimation from '../../assets/animations/whats_verification.json';
-
 var animation;
 export default function Home() {
   const phoneNumberRef = useRef();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [textError, setTextError] = useState(false);
+  const [phoneIsVerified, setPhoneIsVerified] = useState(false);
 
   // Implemenações futuras
   const [validSizeNumber, setValidSizeNumber] = useState(11);
   const [invalidSizeNumber, setInalidSizeNumber] = useState(10);
-  const [postalCodeCountry, setPostalCodeCountry] = useState('+55');
-  const [maskPhoneNumber, setMaskPhoneNumber] = useState(
-    '([00]) [00000]-[0000]',
-  );
+  const [dialCode, setDialCode] = useState('');
+
   const [phoneNumberOldLength, setPhoneNumberOldLength] = useState();
 
+  function clearTextInput() {
+    setPhoneNumber('');
+    setPhoneIsVerified(false);
+  }
+
   function handdleSubmit() {
-    if (phoneNumberOldLength === validSizeNumber) {
+    if (phoneIsVerified) {
       Keyboard.dismiss();
-      Linking.openURL(
-        `whatsapp://send?phone=${postalCodeCountry}${phoneNumber}`,
-      );
+      Linking.openURL(`whatsapp://send?phone=${dialCode}${phoneNumber}`);
     } else {
       setTextError(true);
     }
   }
 
   useEffect(() => {
-    if (phoneNumber.length === validSizeNumber) {
+    if (phoneIsVerified) {
       animation.play(0, 75);
       setTimeout(() => {
         animation.pause();
       }, 900);
     }
 
-    if (
-      phoneNumberOldLength === validSizeNumber &&
-      phoneNumber.length === invalidSizeNumber
-    ) {
+    if (!phoneIsVerified) {
       animation.play(76, 119);
       setTimeout(() => {
         animation.pause();
       }, 900);
     }
     setPhoneNumberOldLength(phoneNumber.length);
-  }, [phoneNumber]);
+  }, [phoneIsVerified]);
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        title: 'Open Whats - Mensagem direto sem salvar o contato',
+        message:
+          'Instale essa ferramenta incrível que te ajudará a enviar mensagens pelo WhatsApp sem precisar adicionar o contato em sua lista de contatos. \nhttps://play.google.com/store/apps/details?id=com.findwhats',
+        url: 'https://play.google.com/store/apps/details?id=com.findwhats',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+        } else {
+        }
+      } else if (result.action === Share.dismissedAction) {
+      }
+    } catch (error) {}
+  };
 
   return (
     <ImageBackground
       source={require('../../assets/images/background.png')}
-      style={{flex: 1}}>
-      <LabelTitle>Open Whats</LabelTitle>
+      style={{flex: 1, paddingTop: 30}}>
+      <StatusBar
+        translucent
+        barStyle={'light-content'}
+        backgroundColor={'transparent'}
+      />
+      <Row style={{justifyContent: 'space-between', paddingHorizontal: 10}}>
+        <Row />
+        <LabelTitle>Open Whats</LabelTitle>
+        <TouchableOpacity
+          onPress={onShare}
+          style={{
+            width: 40,
+            height: 40,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Icon name={'share-social-outline'} size={22} color={'#FFF'} />
+        </TouchableOpacity>
+      </Row>
+
       <Container>
         <Header>
           <LabelHeader>
             Envie mensagem para qualquer número pelo WhatsApp, sem precisar
-            adicionar como contato.
+            salvar o contato.
           </LabelHeader>
         </Header>
         <Body>
@@ -93,20 +129,20 @@ export default function Home() {
             <Column>
               <LabelInput>Informe o número</LabelInput>
               <ContainerInput style={[textError && {borderColor: '#f71919'}]}>
-                <TextInputMask
-                  maxLength={15}
-                  value={phoneNumber}
-                  returnKeyType="send"
-                  style={TextInputStyle}
-                  mask={maskPhoneNumber}
-                  refInput={phoneNumberRef}
-                  keyboardType={'numeric'}
-                  onSubmitEditing={handdleSubmit}
-                  placeholder={'Ex.: (12) 34567-8901'}
-                  onChangeText={(formatted, extracted) => {
-                    if (textError) setTextError(false);
-                    setPhoneNumber(extracted);
+                <IntlPhoneInput
+                  defaultCountry={'BR'}
+                  onChangeText={({
+                    dialCode,
+                    isVerified,
+                    unmaskedPhoneNumber,
+                  }) => {
+                    setTextError(false);
+                    setDialCode(dialCode);
+                    setPhoneIsVerified(isVerified);
+                    setPhoneNumber(unmaskedPhoneNumber);
                   }}
+                  clearTextInput={clearTextInput}
+                  onSubmitEditing={handdleSubmit}
                 />
               </ContainerInput>
             </Column>
@@ -120,18 +156,15 @@ export default function Home() {
           </Row>
           <Button
             style={{
-              backgroundColor:
-                phoneNumber.length === validSizeNumber ? '#249035' : '#aaa',
+              backgroundColor: phoneIsVerified ? '#249035' : '#aaa',
             }}
-            activeOpacity={phoneNumber.length !== validSizeNumber ? 1 : 0.5}
-            onPress={
-              phoneNumber.length === validSizeNumber ? handdleSubmit : null
-            }>
+            activeOpacity={phoneIsVerified ? 1 : 0.5}
+            onPress={phoneIsVerified ? handdleSubmit : null}>
             <LabelButton>Abrir no WhatsApp</LabelButton>
           </Button>
         </Body>
         <Footer>
-          <LabelFooter>Versão: 1.0.1</LabelFooter>
+          <LabelFooter>Versão: {DeviceInfo.getVersion()}</LabelFooter>
         </Footer>
       </Container>
     </ImageBackground>
