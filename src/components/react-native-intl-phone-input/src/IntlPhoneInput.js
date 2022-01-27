@@ -36,9 +36,12 @@ export default class IntlPhoneInput extends React.Component {
   onChangePropText = (unmaskedPhoneNumber, phoneNumber) => {
     const {dialCode, mask, selectedCountry} = this.state;
     const countOfNumber = mask.match(/9/g).length;
+
     if (this.props.onChangeText) {
       const isVerified =
-        countOfNumber === unmaskedPhoneNumber?.length &&
+        (countOfNumber === unmaskedPhoneNumber?.length ||
+          (dialCode === '+55' &&
+            countOfNumber === unmaskedPhoneNumber?.length + 1)) &&
         phoneNumber?.length > 0;
       this.props.onChangeText({
         dialCode,
@@ -186,6 +189,7 @@ export default class IntlPhoneInput extends React.Component {
                   autoFocus
                   onChangeText={this.filterCountries}
                   placeholder={filterText || 'Filtrar'}
+                  placeholderTextColor={"#ccc"}
                   style={[styles.filterInputStyle, filterInputStyle]}
                 />
                 <Icon name={'search-outline'} size={25} color={'#29a73d'} />
@@ -272,10 +276,18 @@ export default class IntlPhoneInput extends React.Component {
           returnKeyType="send"
           secureTextEntry={false}
           keyboardType="number-pad"
+          placeholderTextColor={'#ccc'}
           value={this.state.phoneNumber}
           onChangeText={this.onChangeText}
           onSubmitEditing={onSubmitEditing}
         />
+
+        <TouchableOpacity disabled={this.state.phoneNumber.length === 0} onPress={() => {
+            this.onChangePropText("", "");
+          this.setState({phoneNumber: ""});
+        }} style={styles.trashButton}>
+          <Icon name={'trash-outline'} size={20} color={this.state.phoneNumber.length !== 0? '#F88': "#aaa"} />
+        </TouchableOpacity>
         {this.renderAction()}
         {this.renderModal()}
       </View>
@@ -317,6 +329,7 @@ const styles = StyleSheet.create({
   },
   modalCountryItemCountryNameStyle: {
     flex: 1,
+    color: '#333',
     fontSize: 15,
   },
   modalCountryItemContainer: {
@@ -327,7 +340,12 @@ const styles = StyleSheet.create({
   modalFlagStyle: {
     fontSize: 22,
   },
-
+  trashButton: {
+    width: 40, 
+    height: 45, 
+    alignItems: "center", 
+    justifyContent: "center",  
+  },
   modalContainer: {
     flex: 10,
     elevation: 5,
@@ -343,6 +361,7 @@ const styles = StyleSheet.create({
   dialCodeTextStyle: {
     marginLeft: 5,
     fontSize: 16,
+    color: '#333',
   },
   countryModalStyle: {
     flex: 1,
@@ -382,10 +401,12 @@ const styles = StyleSheet.create({
     height: 50,
     fontSize: 16,
     marginLeft: 5,
+    color: '#101010',
   },
   container: {
     flex: 1,
     padding: 5,
+    // paddingLeft: 50,
     alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: 12,

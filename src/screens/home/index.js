@@ -1,9 +1,10 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
+  View,
+  Share,
   Linking,
   Keyboard,
   StatusBar,
-  Share,
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
@@ -17,33 +18,31 @@ import {
   Column,
   Container,
   LabelTitle,
+  LinkButton,
   LabelInput,
   LabelHeader,
   LabelFooter,
   LabelButton,
   ContainerInput,
-  TextInputStyle,
   ContainerWhastsAnimation,
 } from './styles';
 
+import {BannerAd, BannerAdSize} from '@react-native-admob/admob';
 import LottieView from 'lottie-react-native';
 import {IntlPhoneInput} from '../../components';
 import DeviceInfo from 'react-native-device-info';
 import Icon from 'react-native-vector-icons/Ionicons';
-import DrinkAnimation from '../../assets/animations/whats_verification.json';
+import PhoneAnimation from '../../assets/animations/whats_verification.json';
+
 var animation;
 export default function Home() {
-  const phoneNumberRef = useRef();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [textError, setTextError] = useState(false);
   const [phoneIsVerified, setPhoneIsVerified] = useState(false);
-
-  // Implemenações futuras
-  const [validSizeNumber, setValidSizeNumber] = useState(11);
-  const [invalidSizeNumber, setInalidSizeNumber] = useState(10);
+  const [keyboardIsOpened, setKeyboardIsOpened] = useState(false);
   const [dialCode, setDialCode] = useState('');
 
-  const [phoneNumberOldLength, setPhoneNumberOldLength] = useState();
+  // const [_, setPhoneNumberOldLength] = useState();
 
   function clearTextInput() {
     setPhoneNumber('');
@@ -62,18 +61,14 @@ export default function Home() {
   useEffect(() => {
     if (phoneIsVerified) {
       animation.play(0, 75);
-      setTimeout(() => {
-        animation.pause();
-      }, 900);
+    } else {
+      animation.play(76, 119);
     }
 
-    if (!phoneIsVerified) {
-      animation.play(76, 119);
-      setTimeout(() => {
-        animation.pause();
-      }, 900);
-    }
-    setPhoneNumberOldLength(phoneNumber.length);
+    setTimeout(() => {
+      animation.pause();
+    }, 900);
+    // setPhoneNumberOldLength(phoneNumber.length);
   }, [phoneIsVerified]);
 
   const onShare = async () => {
@@ -93,6 +88,20 @@ export default function Home() {
     } catch (error) {}
   };
 
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardIsOpened(true);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardIsOpened(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
   return (
     <ImageBackground
       source={require('../../assets/images/background.png')}
@@ -102,6 +111,7 @@ export default function Home() {
         barStyle={'light-content'}
         backgroundColor={'transparent'}
       />
+
       <Row style={{justifyContent: 'space-between', paddingHorizontal: 10}}>
         <Row />
         <LabelTitle>Open Whats</LabelTitle>
@@ -124,6 +134,13 @@ export default function Home() {
             salvar o contato.
           </LabelHeader>
         </Header>
+        <View style={{minHeight: 70, left: -15}}>
+          <BannerAd
+            unitId="ca-app-pub-8357397311847363/1089641260"
+            size={BannerAdSize.ADAPTIVE_BANNER}
+            requestOptions={{requestNonPersonalizedAdsOnly: false}}
+          />
+        </View>
         <Body>
           <Row>
             <Column>
@@ -146,13 +163,6 @@ export default function Home() {
                 />
               </ContainerInput>
             </Column>
-            <ContainerWhastsAnimation>
-              <LottieView
-                source={DrinkAnimation}
-                ref={(e) => (animation = e)}
-                style={{height: 100, width: 30}}
-              />
-            </ContainerWhastsAnimation>
           </Row>
           <Button
             style={{
@@ -160,12 +170,28 @@ export default function Home() {
             }}
             activeOpacity={phoneIsVerified ? 1 : 0.5}
             onPress={phoneIsVerified ? handdleSubmit : null}>
+              <ContainerWhastsAnimation>
+                <LottieView
+                  source={PhoneAnimation}
+                  ref={e => (animation = e)}
+                  style={{height: 90, width: 30}}
+                />
+              </ContainerWhastsAnimation>
             <LabelButton>Abrir no WhatsApp</LabelButton>
           </Button>
+
+          <LinkButton onPress={onShare}>
+            <LabelButton style={{color: '#249035', marginRight: 5}}>
+              Indicar o app para amigos
+            </LabelButton>
+            <Icon name={'share-social-outline'} size={20} color={'#249035'} />
+          </LinkButton>
         </Body>
-        <Footer>
-          <LabelFooter>Versão: {DeviceInfo.getVersion()}</LabelFooter>
-        </Footer>
+        {!keyboardIsOpened && (
+          <Footer>
+            <LabelFooter>Versão: {DeviceInfo.getVersion()}</LabelFooter>
+          </Footer>
+        )}
       </Container>
     </ImageBackground>
   );

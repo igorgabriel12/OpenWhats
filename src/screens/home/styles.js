@@ -53,8 +53,9 @@ export const ContainerInput = styled.View`
 `;
 
 export const ContainerWhastsAnimation = styled.View`
-  top: -3px;
-  right: -20px;
+  top: -20px;
+  right: 0px;
+  z-index: 10;
   position: absolute;
 `;
 
@@ -80,6 +81,15 @@ export const Button = styled.TouchableOpacity`
   justify-content: center;
 `;
 
+export const LinkButton = styled.TouchableOpacity`
+  height: 45px;
+  margin-top: 30px;
+  border-radius: 5px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const LabelButton = styled.Text`
   color: #ffffff;
   font-size: 16px;
@@ -87,7 +97,9 @@ export const LabelButton = styled.Text`
   padding-horizontal: 10px;
 `;
 
-export const Footer = styled.View``;
+export const Footer = styled.View`
+  padding: 10px;
+`;
 
 export const LabelFooter = styled.Text`
   color: #bbb;
