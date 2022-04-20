@@ -59,15 +59,17 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (phoneIsVerified) {
-      animation.play(0, 75);
-    } else {
-      animation.play(76, 119);
-    }
+    if (animation) {
+      if (phoneIsVerified) {
+        animation?.play(0, 75);
+      } else {
+        animation?.play(76, 119);
+      }
 
-    setTimeout(() => {
-      animation.pause();
-    }, 900);
+      setTimeout(() => {
+        animation?.pause();
+      }, 900);
+    }
     // setPhoneNumberOldLength(phoneNumber.length);
   }, [phoneIsVerified]);
 
@@ -170,13 +172,13 @@ export default function Home() {
             }}
             activeOpacity={phoneIsVerified ? 1 : 0.5}
             onPress={phoneIsVerified ? handdleSubmit : null}>
-              <ContainerWhastsAnimation>
-                <LottieView
-                  source={PhoneAnimation}
-                  ref={e => (animation = e)}
-                  style={{height: 90, width: 30}}
-                />
-              </ContainerWhastsAnimation>
+            <ContainerWhastsAnimation>
+              <LottieView
+                source={PhoneAnimation}
+                ref={(e) => (animation = e)}
+                style={{height: 90, width: 30}}
+              />
+            </ContainerWhastsAnimation>
             <LabelButton>Abrir no WhatsApp</LabelButton>
           </Button>
 
