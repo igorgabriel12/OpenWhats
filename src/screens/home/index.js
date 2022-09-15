@@ -1,12 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {
-  View,
   Share,
   Linking,
   Keyboard,
   StatusBar,
   ImageBackground,
-  TouchableOpacity,
 } from 'react-native';
 
 import {
@@ -23,7 +21,9 @@ import {
   LabelHeader,
   LabelFooter,
   LabelButton,
+  ShareButton,
   ContainerInput,
+  ContainerBannerAd,
   ContainerWhastsAnimation,
 } from './styles';
 
@@ -41,8 +41,6 @@ export default function Home() {
   const [phoneIsVerified, setPhoneIsVerified] = useState(false);
   const [keyboardIsOpened, setKeyboardIsOpened] = useState(false);
   const [dialCode, setDialCode] = useState('');
-
-  // const [_, setPhoneNumberOldLength] = useState();
 
   function clearTextInput() {
     setPhoneNumber('');
@@ -70,7 +68,6 @@ export default function Home() {
         animation?.pause();
       }, 900);
     }
-    // setPhoneNumberOldLength(phoneNumber.length);
   }, [phoneIsVerified]);
 
   const onShare = async () => {
@@ -117,16 +114,9 @@ export default function Home() {
       <Row style={{justifyContent: 'space-between', paddingHorizontal: 10}}>
         <Row />
         <LabelTitle>Open Whats</LabelTitle>
-        <TouchableOpacity
-          onPress={onShare}
-          style={{
-            width: 40,
-            height: 40,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
+        <ShareButton onPress={onShare}>
           <Icon name={'share-social-outline'} size={22} color={'#FFF'} />
-        </TouchableOpacity>
+        </ShareButton>
       </Row>
 
       <Container>
@@ -136,13 +126,13 @@ export default function Home() {
             salvar o contato.
           </LabelHeader>
         </Header>
-        <View style={{minHeight: 70, left: -15}}>
+        <ContainerBannerAd>
           <BannerAd
-            unitId="ca-app-pub-8357397311847363/1089641260"
             size={BannerAdSize.ADAPTIVE_BANNER}
+            unitId="ca-app-pub-8357397311847363/1089641260"
             requestOptions={{requestNonPersonalizedAdsOnly: false}}
           />
-        </View>
+        </ContainerBannerAd>
         <Body>
           <Row>
             <Column>

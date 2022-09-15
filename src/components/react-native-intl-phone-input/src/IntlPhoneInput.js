@@ -189,7 +189,7 @@ export default class IntlPhoneInput extends React.Component {
                   autoFocus
                   onChangeText={this.filterCountries}
                   placeholder={filterText || 'Filtrar'}
-                  placeholderTextColor={"#ccc"}
+                  placeholderTextColor={'#ccc'}
                   style={[styles.filterInputStyle, filterInputStyle]}
                 />
                 <Icon name={'search-outline'} size={25} color={'#29a73d'} />
@@ -271,7 +271,7 @@ export default class IntlPhoneInput extends React.Component {
           placeholder={
             this.props.placeholder || this.state.mask.replace(/9/g, '_')
           }
-          autoFocus
+          // autoFocus
           autoCorrect={false}
           returnKeyType="send"
           secureTextEntry={false}
@@ -282,11 +282,18 @@ export default class IntlPhoneInput extends React.Component {
           onSubmitEditing={onSubmitEditing}
         />
 
-        <TouchableOpacity disabled={this.state.phoneNumber.length === 0} onPress={() => {
-            this.onChangePropText("", "");
-          this.setState({phoneNumber: ""});
-        }} style={styles.trashButton}>
-          <Icon name={'trash-outline'} size={20} color={this.state.phoneNumber.length !== 0? '#F88': "#aaa"} />
+        <TouchableOpacity
+          disabled={this.state.phoneNumber.length === 0}
+          onPress={() => {
+            this.onChangePropText('', '');
+            this.setState({phoneNumber: ''});
+          }}
+          style={styles.trashButton}>
+          <Icon
+            name={'trash-outline'}
+            size={20}
+            color={this.state.phoneNumber.length !== 0 ? '#F88' : '#aaa'}
+          />
         </TouchableOpacity>
         {this.renderAction()}
         {this.renderModal()}
@@ -341,10 +348,10 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
   trashButton: {
-    width: 40, 
-    height: 45, 
-    alignItems: "center", 
-    justifyContent: "center",  
+    width: 40,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   modalContainer: {
     flex: 10,

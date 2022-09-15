@@ -20,6 +20,13 @@ export const Header = styled.View`
   background-color: #ffffff;
 `;
 
+export const ShareButton = styled.TouchableOpacity`
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const LabelHeader = styled.Text`
   color: #888;
   font-size: 18px;
@@ -81,6 +88,10 @@ export const Button = styled.TouchableOpacity`
   justify-content: center;
 `;
 
+export const ContainerBannerAd = styled.View`
+  left: -15px;
+  min-height: 70px;
+`;
 export const LinkButton = styled.TouchableOpacity`
   height: 45px;
   margin-top: 30px;
