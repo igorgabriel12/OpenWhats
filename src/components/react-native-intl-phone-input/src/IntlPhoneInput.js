@@ -19,8 +19,8 @@ export default class IntlPhoneInput extends React.Component {
   constructor(props) {
     super(props);
     const defaultCountry =
-      data.filter((obj) => obj.code === props.defaultCountry)[0] ||
-      data.filter((obj) => obj.code === 'TR')[0];
+      data.filter(obj => obj.code === props.defaultCountry)[0] ||
+      data.filter(obj => obj.code === 'TR')[0];
     this.state = {
       defaultCountry,
       flag: defaultCountry.flag,
@@ -34,7 +34,7 @@ export default class IntlPhoneInput extends React.Component {
   }
 
   onChangePropText = (unmaskedPhoneNumber, phoneNumber) => {
-    const {dialCode, mask, selectedCountry} = this.state;
+    const { dialCode, mask, selectedCountry } = this.state;
     const countOfNumber = mask.match(/9/g).length;
 
     if (this.props.onChangeText) {
@@ -53,11 +53,11 @@ export default class IntlPhoneInput extends React.Component {
     }
   };
 
-  onChangeText = (value) => {
+  onChangeText = value => {
     let unmaskedPhoneNumber = (value.match(/\d+/g) || []).join('');
 
     if (unmaskedPhoneNumber.length === 0) {
-      this.setState({phoneNumber: ''});
+      this.setState({ phoneNumber: '' });
       this.onChangePropText('', '');
       return;
     }
@@ -77,22 +77,22 @@ export default class IntlPhoneInput extends React.Component {
     unmaskedPhoneNumber = (phoneNumber.match(/\d+/g) || []).join('');
 
     this.onChangePropText(unmaskedPhoneNumber, phoneNumber);
-    this.setState({phoneNumber});
+    this.setState({ phoneNumber });
   };
 
   showModal = () =>
     this.props.disableCountryChange
       ? null
-      : this.setState({modalVisible: true});
+      : this.setState({ modalVisible: true });
 
   hideModal = () => {
-    this.setState({modalVisible: false});
+    this.setState({ modalVisible: false });
   };
 
-  onCountryChange = async (code) => {
+  onCountryChange = async code => {
     const countryData = await data;
     try {
-      const country = await countryData.filter((obj) => obj.code === code)[0];
+      const country = await countryData.filter(obj => obj.code === code)[0];
       this.setState({
         dialCode: country.dialCode,
         flag: country.flag,
@@ -113,14 +113,14 @@ export default class IntlPhoneInput extends React.Component {
     }
   };
 
-  filterCountries = (value) => {
-    const {lang} = this.props;
+  filterCountries = value => {
+    const { lang } = this.props;
     const countryData = data.filter(
-      (obj) =>
+      obj =>
         obj[lang?.toLowerCase() ?? 'en']?.indexOf(value) > -1 ||
         obj.dialCode.indexOf(value) > -1,
     );
-    this.setState({countryData});
+    this.setState({ countryData });
   };
 
   focus() {
@@ -165,12 +165,13 @@ export default class IntlPhoneInput extends React.Component {
             <View style={{}}>
               <View
                 style={{
+                  paddingLeft: 15,
+                  paddingRight: 5,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  paddingHorizontal: 5,
                   justifyContent: 'space-between',
                 }}>
-                <Text style={{fontSize: 18, color: '#333'}}>
+                <Text style={{ fontSize: 18, color: '#333' }}>
                   Selecionar código do país
                 </Text>
                 <TouchableOpacity
@@ -197,10 +198,10 @@ export default class IntlPhoneInput extends React.Component {
             </View>
 
             <FlatList
-              style={{flex: 1}}
+              style={{ flex: 1 }}
               data={this.state.countryData}
               keyExtractor={(item, index) => index.toString()}
-              renderItem={({item}) => (
+              renderItem={({ item }) => (
                 <TouchableWithoutFeedback
                   onPress={() => {
                     this.props.clearTextInput();
@@ -245,7 +246,7 @@ export default class IntlPhoneInput extends React.Component {
   };
 
   render() {
-    const {flag} = this.state;
+    const { flag } = this.state;
     const {
       flagStyle,
       inputProps,
@@ -255,7 +256,7 @@ export default class IntlPhoneInput extends React.Component {
       dialCodeTextStyle,
     } = this.props;
     return (
-      <View style={{...styles.container, ...containerStyle}}>
+      <View style={{ ...styles.container, ...containerStyle }}>
         <TouchableOpacity onPress={() => this.showModal()}>
           <View style={styles.openDialogView}>
             <Text style={[styles.flagStyle, flagStyle]}>{flag}</Text>
@@ -286,7 +287,7 @@ export default class IntlPhoneInput extends React.Component {
           disabled={this.state.phoneNumber.length === 0}
           onPress={() => {
             this.onChangePropText('', '');
-            this.setState({phoneNumber: ''});
+            this.setState({ phoneNumber: '' });
           }}
           style={styles.trashButton}>
           <Icon

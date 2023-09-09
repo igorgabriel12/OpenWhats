@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "755235579666",
+    "project_id": "open-whats-d65f7",
+    "storage_bucket": "open-whats-d65f7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755235579666:android:cf0a9f75ad53d5f4a6f5cb",
+        "android_client_info": {
+          "package_name": "com.findwhats"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "755235579666-6ojv45lqlvidgbqgingsh8n7d88cejvv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyjfHsHJzb9X76a7ccDXVSNhTOjrP-lqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "755235579666-6ojv45lqlvidgbqgingsh8n7d88cejvv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

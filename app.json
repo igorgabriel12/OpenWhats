@@ -1,4 +1,8 @@
 {
   "name": "FindWhats",
-  "displayName": "FindWhats"
+  "displayName": "FindWhats",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-8357397311847363~5998353012",
+    "ios_app_id": "ca-app-pub-8357397311847363/1089641260"
+  }
 }

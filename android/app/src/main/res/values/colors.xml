@@ -2,4 +2,5 @@
 <resources>
     <item name="splashBackground" type="color">#FFF</item>
     <color name="white">#FFF</color>
+    <color name="status_bar_color">#06EA79</color>
 </resources>
